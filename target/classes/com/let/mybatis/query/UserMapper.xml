@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.let.mybatis.mapper.UserMapper">
+    
+    <select id="dbtest" parameterType="Integer" resultType="String">
+    	SELECT
+    		content
+    	FROM
+    		test
+    	WHERE
+    		id=#{id}
+    </select>
+    
+    <select id="getUserInfo" parameterType="String" resultType="UserResult">
+        SELECT 
+        	id
+        	, userId
+        	, userPw
+        	, name
+        	, date
+        FROM
+        	tbl_richware_user
+        WHERE
+        	userId = #{id}
+    </select>
+    
+    <insert id="addLike" parameterType="hashMap">
+  		insert into tbl_richware_like (bid, uid)
+  		values (#{bid},#{uid})
+	</insert>
+	
+	<delete id="removeLike" parameterType="hashMap">
+  		delete from tbl_richware_like where bid=#{bid} AND uid=#{uid}
+	</delete>
+    
+    <select id="getBoardDetail" parameterType="int" resultMap="getBoardMap">
+        SELECT 
+        	id
+        	, uid
+        	, title
+        	, content
+        	, date
+        	, (SELECT NAME FROM tbl_richware_user WHERE id=`tbl_richware_board`.uid) AS userName
+        	, (SELECT count(*) FROM tbl_richware_like WHERE bid=`tbl_richware_board`.id) AS likes
+        FROM
+        	tbl_richware_board
+        WHERE
+        	id = #{id}
+    </select>
+    
+    <select id = "countPage" resultType = "Integer">
+    	SELECT count(*) FROM tbl_richware_board
+    </select>
+    
+    <select id = "getBoardFile" resultType = "FileBean">
+    	SELECT * FROM tbl_richware_file WHERE bid=#{id} LIMIT 1
+    </select>
+    
+    <resultMap id = "getBoardMap" type="BoardBean">
+    	<id column="id" javaType="int" property="id" /> 
+		<collection property="file" column="{id=id}" javaType="FileBean" select="getBoardFile"></collection>
+    </resultMap>
+    
+    <select id="getBoardList" parameterType="hashMap" resultType="BoardBean">
+        SELECT 
+        	id
+        	, uid
+        	, title
+        	, content
+        	, date
+        	, (SELECT NAME FROM tbl_richware_user WHERE id=`tbl_richware_board`.uid) AS userName
+        	-- , (SELECT * FROM tbl_richware_file WHERE bid=`tbl_richware_board`.id LIMIT 1)
+        FROM
+        	tbl_richware_board
+        ORDER BY
+        	id desc
+        LIMIT
+        	#{start}, #{count}
+    </select>
+    
+    <update id="modifyUser" parameterType="hashMap">
+    	UPDATE
+    		tbl_richware_user
+		SET
+			userPw = #{userPw}, name = #{name}
+		WHERE
+			userId = #{userId};
+    </update>
+    
+    <insert id="signupUser" parameterType="hashMap">
+  		insert into tbl_richware_user (userId,userPw,name)
+  		values (#{userId},#{userPw},#{name})
+	</insert>
+	
+	<insert id="writeBoard" parameterType="hashMap" useGeneratedKeys="true" keyProperty="id">
+  		insert into tbl_richware_board (uid,title,content)
+  		values (#{uid},#{title},#{content})
+	</insert>
+	
+	<insert id="indexingFile" parameterType="hashMap" useGeneratedKeys="true" keyProperty="id">
+  		insert into tbl_richware_file (bid,name,ext,filePath)
+  		values (#{bid},#{name},#{ext},#{filePath})
+	</insert>
+    
+    <select id="Login" parameterType="hashMap" resultType="Integer">
+        SELECT
+        	COUNT(*)
+        FROM
+        	tbl_richware_user
+        WHERE 
+        	userId = #{userId} AND userPw = #{userPw}
+    </select>
+    
+    <select id = "isLike" parameterType="Integer" resultType="Integer">
+        SELECT
+        	COUNT(*)
+        FROM
+        	tbl_richware_like
+        WHERE
+        	uid = #{id}
+    </select>
+    
+    <!-- userId 중복 체크 -->
+    <select id = "duplicateUserId" parameterType="String" resultType="Integer">
+        SELECT
+        	COUNT(*)
+        FROM
+        	tbl_richware_user
+        WHERE
+        	userId = #{userId}
+    </select>
+    
+    <!-- userNick 중복 체크 -->
+   <select id = "duplicateUserNick" parameterType="String" resultType="Integer">
+        SELECT
+        	COUNT(*)
+        FROM
+        	tbl_richware_user
+        WHERE
+        	userNick = #{userNick}
+    </select>
+	
+</mapper>
