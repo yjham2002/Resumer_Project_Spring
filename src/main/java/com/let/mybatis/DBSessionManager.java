@@ -16,9 +16,7 @@ public class DBSessionManager{
 	//private static SqlSession			session			= null;
 
 	public DBSessionManager() throws Exception{
-		if(sessionFactory == null){
-			this.makeSessionFactory();
-		}
+		if(sessionFactory == null) this.makeSessionFactory();
 	}
 
 	private void makeSessionFactory() throws Exception{
@@ -31,22 +29,15 @@ public class DBSessionManager{
 			e.printStackTrace();
 		}
 		SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
-
 		sessionFactory = sqlSessionFactory;
 	}
 
-	protected void closeSession(SqlSession session) throws Exception
-	{
-		if(session != null)
-		{
-			session.close();
-		}
+	protected void closeSession(SqlSession session) throws Exception{
+		if(session != null) session.close();
 	}
 
 	protected SqlSession getSession() throws Exception{
-		SqlSession session = sessionFactory.openSession();
-
-		return session;
+		return sessionFactory.openSession();
 	}
 
 }

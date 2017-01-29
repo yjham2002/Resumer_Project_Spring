@@ -15,11 +15,7 @@
     </settings>    
 	
 	<typeAliases>
-		<typeAlias alias="UserBean" type="com.let.bean.persistence.UserBean"/>
-		<typeAlias alias="UserResult" type="com.let.bean.result.UserResult"/>
-		<typeAlias alias="FileBean" type="com.let.bean.persistence.FileBean"/>
-		<typeAlias alias="BoardBean" type="com.let.bean.persistence.BoardBean"/>
-		<typeAlias alias="ListBean" type="com.let.bean.persistence.ListBean"/>
+		<typeAlias alias="DataMap" type="com.let.bean.persistence.DataMap"/>
 	</typeAliases>
 	    
 	<environments default="development">

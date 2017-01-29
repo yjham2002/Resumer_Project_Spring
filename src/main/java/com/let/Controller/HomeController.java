@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.let.Service.UserService;
+import com.let.bean.persistence.DataMap;
 
 /**
  * Handles requests for the application home page.
@@ -43,7 +44,7 @@ public class HomeController {
 	public String test(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		UserService svc = null;
-		String ret = "hello";
+		String ret = null;
 		try{
 			svc = new UserService();
 			ret = svc.dbtest(1);
